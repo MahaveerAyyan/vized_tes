@@ -1,0 +1,29 @@
+- route:
+    id: route-2840
+    from:
+      id: from-3973
+      uri: file:/Users/mahaveer-12725/Documents/test_folder
+      parameters:
+        noop: "true"
+      steps:
+        - setProperty:
+            id: setProperty-1994
+            expression:
+              simple:
+                expression: |
+                  ${body}
+            name: requiredData
+        - setProperty:
+            id: setProperty-2815
+            expression:
+              js:
+                expression: |
+                  var csvData = exchange.getProperty("requiredData");
+
+                  // Process the CSV data
+                  var lines = csvData.toString().split('\n');
+                  JSON.stringify(lines)
+            name: result
+        - log:
+            id: log-5866
+            message: ${body}

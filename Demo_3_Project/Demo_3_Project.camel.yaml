@@ -1,0 +1,67 @@
+- route:
+    id: route-8890
+    description: ""
+    from:
+      id: from-2061
+      uri: file:/Users/mahaveer-12725/Documents/test_folder
+      parameters:
+        noop: "true"
+      steps:
+        - split:
+            id: split-1608
+            description: ""
+            steps:
+              - choice:
+                  id: choice-2626
+                  otherwise:
+                    id: otherwise-2284
+                    steps:
+                      - setProperty:
+                          id: setProperty-4090
+                          expression:
+                            js:
+                              id: ""
+                              expression: |-
+                                var data = body.split(',');
+                                var scores = data.slice(2);
+                                var total = scores.reduce(function(sum, score) {
+                                    return sum + Number(score);
+                                }, 0);
+
+                                var margin = 35;x
+                                var status = scores.every(function(score) {
+                                    return Number(score) >= margin;
+                                }) ? 'Passed' : 'Failed';
+
+                                data.push(total, status);
+                                var result = data.join(',');
+
+                                exchange.getIn().setBody(result);
+                          name: value
+                      - log:
+                          id: log-1320
+                          message: ${body}
+                  when:
+                    - id: when-2140
+                      steps:
+                        - setProperty:
+                            id: setProperty-4259
+                            expression:
+                              js:
+                                expression: |
+                                  body + ',total,status'
+                            name: csvheader
+                        - log:
+                            id: log-3187
+                            message: test - ${body}
+                      expression:
+                        simple:
+                          expression: |
+                            ${exchangeProperty.CamelSplitIndex} == 0
+            aggregationStrategy: "#class:RankAggregator  "
+            expression:
+              tokenize:
+                token: \n
+        - log:
+            id: log-8497
+            message: ${body}

@@ -1,0 +1,73 @@
+- route:
+    id: route-2595
+    from:
+      id: students-marks-source-folder
+      uri: file:C:/vized-io/github-workspace/test/student-marks-example/input
+      parameters:
+        move: .done
+        moveFailed: .failed
+      steps:
+        - split:
+            id: process-student-records
+            steps:
+              - choice:
+                  id: classify-records
+                  otherwise:
+                    id: Values
+                    steps:
+                      - setProperty:
+                          id: parse-record
+                          expression:
+                            groovy:
+                              expression: >
+                                def fields = body.split(",") as List;
+
+                                def headers = exchange.getProperty('header') as
+                                List;
+
+                                [
+                                    "${headers?.get(0) ?: 'student_id'}": fields?.get(0),
+                                    "${headers?.get(1) ?: 'student_name'}": fields?.get(1),
+                                    "${headers?.get(2) ?: 'subj1'}": fields?.get(2)?.toDouble(),
+                                    "${headers?.get(3) ?: 'subj2'}": fields?.get(3)?.toDouble(),
+                                    "${headers?.get(4) ?: 'subj3'}": fields?.get(4)?.toDouble(),
+                                    "${headers?.get(5) ?: 'subj4'}": fields?.get(5)?.toDouble(),
+                                    "${headers?.get(6) ?: 'subj5'}": fields?.get(6)?.toDouble(),
+                                    "total_marks": fields?.get(2)?.toDouble() + fields?.get(3)?.toDouble() + fields?.get(4)?.toDouble() + fields?.get(5)?.toDouble() + fields?.get(6)?.toDouble(),
+                                    "pass_status": (fields?.get(2)?.toDouble() >= 35 && fields?.get(3)?.toDouble() >= 35 && fields?.get(4)?.toDouble() >= 35 && fields?.get(5)?.toDouble() >= 35 && fields?.get(6)?.toDouble() >= 35) ? "Pass" : "Fail"
+                                ];
+                          name: studentRecord
+                      - to:
+                          id: log-record
+                          uri: log:output-logger
+                          parameters:
+                            showBody: "true"
+                  when:
+                    - id: header
+                      steps:
+                        - setProperty:
+                            id: Set-Header-in-Property
+                            expression:
+                              groovy: |
+                                def header = body.split(",")
+                                header
+                            name: header
+                        - log:
+                            id: Log-Header
+                            message: "Header Set: ${exchangeProperty.header}"
+                      expression:
+                        simple:
+                          expression: |
+                            ${exchangeProperty.CamelSplitIndex} == 0
+            aggregationStrategy: "#class:custom.CollectBodyAggregator"
+            expression:
+              tokenize:
+                token: \n
+            streaming: "true"
+            synchronous: "true"
+        - to:
+            id: log-final-output
+            uri: log:output-logger
+            parameters:
+              showBody: "true"
+- beans: []

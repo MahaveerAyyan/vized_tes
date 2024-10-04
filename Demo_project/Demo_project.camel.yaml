@@ -1,0 +1,63 @@
+- route:
+    id: route-2804
+    from:
+      id: from-2027
+      uri: file:/Users/mahaveer-12725/Documents/test_folder
+      parameters:
+        noop: "true"
+      steps:
+        - split:
+            id: split-1974
+            steps:
+              - choice:
+                  id: choice-3548
+                  otherwise:
+                    id: otherwise-1687
+                    steps:
+                      - setHeader:
+                          id: setHeader-2149
+                          expression:
+                            js:
+                              expression: >
+                                var content = exchange.getIn().getBody(); 
+
+                                var array =
+                                exchange.getIn().getHeader("csvvalues"); 
+
+                                if(array === null){ 
+
+                                array = []; 
+
+                                array.push(content)
+                                 }
+                                else{ array.push(content) } 
+
+                                JSON.stringify(array);
+                          name: csvvalues
+                      - log:
+                          id: log-2467
+                          message: ${body}
+                  when:
+                    - id: when-1719
+                      steps:
+                        - setHeader:
+                            id: setHeader-4844
+                            expression:
+                              simple: {}
+                            name: csvheader
+                        - log:
+                            id: log-2195
+                            message: True - ${body}
+                      expression:
+                        simple:
+                          expression: ${exchangeProperty.CamelSplitIndex} == 0
+            expression:
+              tokenize:
+                token: \n
+        - aggregate:
+            id: aggregate-3862
+            aggregationStrategy: ""
+        - log:
+            id: log-3296
+            message: csv values - ${exchangeProperty.csvvalues} csv header -
+              ${exchangeProperty.csvheader}

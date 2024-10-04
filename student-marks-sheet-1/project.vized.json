@@ -1,0 +1,27 @@
+{
+  "name": "student-marks-sheet-1",
+  "version": "0.0.1",
+  "artifactId": "student-marks-sheet-1",
+  "group": "com.vized.project",
+  "relativePath": "student-marks-sheet-1",
+  "type": "integration",
+  "environments": {
+    "default": []
+  },
+  "camel": {
+    "routes": {
+      "student-marks-sheet.camel.yaml": {
+        "route-2595": {
+          "id": "route-2595",
+          "breakpoints": []
+        },
+        "undefined": {
+          "breakpoints": []
+        }
+      }
+    },
+    "beans": {
+      "student-marks-sheet.camel.yaml": []
+    }
+  }
+}

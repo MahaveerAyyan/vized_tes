@@ -1,0 +1,24 @@
+{
+  "name": "Demo_project",
+  "version": "0.0.1",
+  "artifactId": "Demo_project",
+  "group": "com.vized.project",
+  "relativePath": "Demo_project",
+  "type": "integration",
+  "camel": {
+    "routes": {
+      "Demo_project.camel.yaml": {
+        "route-2804": {
+          "id": "route-2804",
+          "breakpoints": []
+        }
+      }
+    },
+    "beans": {
+      "Demo_project.camel.yaml": []
+    }
+  },
+  "environments": {
+    "default": []
+  }
+}
