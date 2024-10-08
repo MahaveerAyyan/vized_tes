@@ -8,8 +8,8 @@
   "camel": {
     "routes": {
       "Demo_2_project.camel.yaml": {
-        "route-18947": {
-          "id": "route-18947",
+        "route-2840": {
+          "id": "route-1234",
           "breakpoints": []
         }
       }
